@@ -155,9 +155,11 @@ function mobileLayout(w, h, camZ, vh, vw) {
   const y1 = bar ? bar.offsetTop - 16 : h * .78;
   const R = vw(camZ) * .42, zf = R * Math.cos(.1), df = camZ - zf; // il libro davanti è più vicino
   const pxF = h / vh(df), WR = Math.max(...BOOKS.map(b => b.W));
-  const s = Math.max(.5, Math.min((y1 - y0) * .84 / pxF / (H * 1.04), vw(df) * .7 / (WR * 1.04)));
+  // carosello piatto: il libro davanti al centro, i vicini più piccoli e un po' indietro che spuntano dai lati senza toccarlo
+  const s = Math.max(.5, Math.min((y1 - y0) * .86 / pxF / H, vw(df) * .62 / WR));
   L.R = R; L.ringS = s;
-  L.ringC.set(0, worldY((y0 + y1) / 2, h, zf, vh, camZ) + Math.sin(.1) * R, 0);
+  L.ringC.set(0, worldY((y0 + y1) / 2, h, zf, vh, camZ), 0);
+  L.flow = { z: zf, side: .74, gap: .1 * s, back: .9, half: vw(df) / 2 };
   // libro aperto: tra l'header (o il pulsante del menu) e il pannello che sale dal basso
   const fz = L.focusZ, fd = camZ - fz, a0 = 84, a1 = h * (1 - .52) - 14;
   L.focusS = Math.min(vw(fd) * .88 / (2 * WR), (a1 - a0) * .86 / (h / vh(fd)) / H);
@@ -198,12 +200,24 @@ const frontIdx = () => mod(Math.round(-snapT / STEP), N);
 const vA = new THREE.Vector3(), qA = new THREE.Quaternion(), qB = new THREE.Quaternion(), eA = new THREE.Euler(), X = new THREE.Vector3(1, 0, 0);
 function target(i, t) {
   const a = i * STEP + ringRot;
-  const p = new THREE.Vector3(Math.sin(a) * L.R, Math.sin(t * .9 + i * 1.3) * .07, Math.cos(a) * L.R).applyAxisAngle(X, .1).add(L.ringC);
+  let p, q, s = L.ringS, open = 0;
+  if (L.flow) {
+    // mobile: posizione continua rispetto al libro davanti (0 = centro, ±1 = vicini, oltre = fuori schermo)
+    const F = L.flow, d = Math.atan2(Math.sin(a), Math.cos(a)) / STEP, ad = Math.abs(d), sg = Math.sign(d);
+    const c1 = Math.min(ad, 1), k = 1 - (1 - F.side) * c1;            // scala: 1 davanti, F.side ai lati
+    const wF = books[i].W * L.ringS, wS = WMAX * L.ringS * F.side;
+    const x1 = wF / 2 + F.gap + wS / 2;                                // centro del vicino: bordo interno staccato dal libro davanti
+    const x = sg * (c1 * x1 + Math.max(0, ad - 1) * (wS + F.gap) * 1.6);
+    p = new THREE.Vector3(x, L.ringC.y + Math.sin(t * .9 + i * 1.3) * .04, F.z - c1 * F.back - Math.max(0, ad - 1) * 2);
+    eA.set(.04 + Math.sin(t * .6 + i) * .02, -sg * c1 * .42, 0); q = new THREE.Quaternion().setFromEuler(eA);
+    s *= k * clamp(2.2 - ad);                                          // i libri lontani spariscono (anche quando fanno il giro)
+  } else {
+    p = new THREE.Vector3(Math.sin(a) * L.R, Math.sin(t * .9 + i * 1.3) * .07, Math.cos(a) * L.R).applyAxisAngle(X, .1).add(L.ringC);
+    eA.set(.1 + Math.sin(t * .6 + i) * .03, a, Math.sin(t * .5 + i * 2) * .025); q = new THREE.Quaternion().setFromEuler(eA);
+    if (i === frontIdx() && focus < 0) { s *= 1.08; p.z += .25; }
+  }
   p.y -= ringShift; // l'anello scorre con la sezione finché non è in posizione
-  eA.set(.1 + Math.sin(t * .6 + i) * .03, a, Math.sin(t * .5 + i * 2) * .025); const q = new THREE.Quaternion().setFromEuler(eA);
-  let s = L.ringS, open = 0;
-  if (i === frontIdx() && focus < 0) { s *= 1.08; p.z += .25; }
-  if (i === hover && focus < 0) { p.y += .17; s *= 1.04; }
+  if (i === hover && focus < 0 && !L.flow) { p.y += .17; s *= 1.04; }
   const e1 = ease(heroOut);
   if (i === 0 && hasLibro) {
     const lo = sstep(.5, .82, pLibro);
@@ -220,7 +234,7 @@ function target(i, t) {
       p.set(L.mob ? w / 2 * o : L.focusC + w / 2 * o, L.focusY, L.focusZ);
       eA.set(.03 + mSmooth.y * .04, (-.22 + mSmooth.x * .06) * (1 - o) + spin, 0); q.setFromEuler(eA);
       s = L.focusS; open = o;
-    } else p.z -= L.push;
+    } else { p.z -= L.push; if (L.flow) s *= .001; } // su mobile gli altri libri non devono spuntare sotto quello aperto
   }
   return { p, q, s, open };
 }

@@ -278,7 +278,7 @@ body.cart-open .toast{opacity:0}
 </aside>
 <div class="menu" id="menu" aria-hidden="true">
   <div class="m-veil" data-close></div>
-  <div class="m-panel">
+  <div class="m-panel" data-lenis-prevent>
     <p class="m-claim">Protocolli, programmi<br>ed ebook di Giacomo Spazzini.</p>
     <nav>
     <a href="#biblio" data-to="#biblio"><small>01</small>Tutti i libri</a>
@@ -439,14 +439,14 @@ body.cart-open .toast{opacity:0}
 
 <!-- carrello -->
 <div class="cart-veil" id="cartVeil"></div>
-<aside class="cart" id="cart" aria-label="Carrello">
+<aside class="cart" id="cart" aria-label="Carrello" data-lenis-prevent>
   <div class="cart-h"><span class="lbl">Il tuo carrello</span><button class="x" id="cartX" aria-label="Chiudi">✕</button></div>
   <div class="cart-list" id="cartList"></div>
   <div class="cart-f"><div class="tot"><span class="lbl">Totale</span><b id="cartTot">€0</b></div><button class="pill lg" id="checkout">Vai al pagamento <i>→</i></button><small>Mockup: il pagamento non è attivo.</small></div>
 </aside>
 <div class="toast" id="toast">✓ <span id="toastT">Aggiunto</span></div>
 
-<aside id="panel" aria-hidden="true"></aside>
+<aside id="panel" aria-hidden="true" data-lenis-prevent></aside>
 <div class="focus-hint">Trascina per ruotare · ← → per cambiare libro · Esc per chiudere</div>
 <div class="cur" id="cur"><i></i><b id="curL">APRI</b></div>
 
