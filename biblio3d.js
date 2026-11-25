@@ -79,7 +79,8 @@ function stripes(vertical) { const [c, x] = mk(256, 256, 1); x.fillStyle = '#ece
 /* ---------- three ---------- */
 const canvas = document.getElementById('gl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-const DPR_SCROLL = Math.min(devicePixelRatio, 1.5), DPR_READ = Math.min(devicePixelRatio, 2);
+// su mobile lo schermo ha pochi pixel ma alta densità: piena risoluzione, altrimenti gli ebook risultano sfocati
+const MOBDPR = innerWidth < 860, DPR_SCROLL = Math.min(devicePixelRatio, MOBDPR ? 2.5 : 1.5), DPR_READ = Math.min(devicePixelRatio, MOBDPR ? 3 : 2);
 renderer.setPixelRatio(DPR_SCROLL);
 // risoluzione piena quando si legge un libro (scena ferma), ridotta mentre si scorre
 function setDPR(v) { if (renderer.getPixelRatio() === v) return; renderer.setPixelRatio(v); renderer.setSize(innerWidth, innerHeight, false); }
@@ -144,6 +145,24 @@ scene.add(dim);
 const $ = s => document.querySelector(s);
 const hasLibro = !!$('#libro');
 let L = {};
+// y del mondo che cade su una riga dello schermo (px), alla profondità z: la camera guarda da (0,.35,11) verso (0,.105,0)
+const worldY = (px, h, z, vh, camZ) => .105 + .245 * (z / camZ) + (.5 - px / h) * vh(camZ - z);
+/* Telefono: anello e libro aperto vengono misurati sullo spazio libero vero della pagina,
+   così non finiscono sotto il titolo, la barra in basso, l'header o il pannello. */
+function mobileLayout(w, h, camZ, vh, vw) {
+  const sec = $('#biblio'), top = sec && sec.querySelector('.b-top'), bar = sec && sec.querySelector('.hero-bar');
+  const y0 = top ? top.offsetTop + top.offsetHeight + 16 : h * .3;
+  const y1 = bar ? bar.offsetTop - 16 : h * .78;
+  const R = vw(camZ) * .42, zf = R * Math.cos(.1), df = camZ - zf; // il libro davanti è più vicino
+  const pxF = h / vh(df), WR = Math.max(...BOOKS.map(b => b.W));
+  const s = Math.max(.5, Math.min((y1 - y0) * .84 / pxF / (H * 1.04), vw(df) * .7 / (WR * 1.04)));
+  L.R = R; L.ringS = s;
+  L.ringC.set(0, worldY((y0 + y1) / 2, h, zf, vh, camZ) + Math.sin(.1) * R, 0);
+  // libro aperto: tra l'header (o il pulsante del menu) e il pannello che sale dal basso
+  const fz = L.focusZ, fd = camZ - fz, a0 = 84, a1 = h * (1 - .52) - 14;
+  L.focusS = Math.min(vw(fd) * .88 / (2 * WR), (a1 - a0) * .86 / (h / vh(fd)) / H);
+  L.focusY = worldY((a0 + a1) / 2, h, fz, vh, camZ);
+}
 function layout() {
   const w = innerWidth, h = innerHeight, asp = w / h, mob = w < 860;
   renderer.setSize(w, h, false);
@@ -160,6 +179,7 @@ function layout() {
     libro: mob ? new THREE.Vector3(0, vh(ld) * .2, lz) : new THREE.Vector3(vw(ld) * .19, -.05, lz),
     libroS: mob ? .85 : Math.min(1.05, vh(ld) * .7 / H),
     focusC: fxC, focusY: fy, focusZ: fz, focusS: fs, push: 9 };
+  if (mob) mobileLayout(w, h, camZ, vh, vw);
   dim.position.z = fz - 1.6;
   measure();
 }
