@@ -53,23 +53,26 @@ main{padding-right:var(--rail)}
 .rail{position:fixed;top:0;right:0;bottom:0;width:var(--rail);z-index:95;background:var(--ink);border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:18px 0 26px}
 .burger{width:32px;height:32px;display:flex;flex-direction:column;justify-content:center;gap:5px;align-items:center}
 .burger i{display:block;width:20px;height:1.5px;background:var(--paper);transition:transform .45s cubic-bezier(.7,0,.2,1),opacity .3s}
-body.menu .burger i:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
-body.menu .burger i:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
+body.menu-open .burger i:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
+body.menu-open .burger i:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
 .rail .vt{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#c9cdd6;white-space:nowrap}
 .rail .rp{width:2px;height:70px;background:var(--line);position:relative;overflow:hidden;border-radius:2px}
 .rail .rp b{position:absolute;left:0;right:0;top:0;height:100%;background:var(--acid);transform-origin:top;transform:scaleY(0)}
-.menu{position:fixed;inset:0 var(--rail) 0 0;z-index:94;background:var(--ink);display:grid;grid-template-columns:1.3fr 1fr;clip-path:inset(0 0 0 100%);transition:clip-path .8s cubic-bezier(.7,0,.2,1)}
-body.menu .menu{clip-path:inset(0 0 0 0)}
-.menu nav{display:flex;flex-direction:column;justify-content:center;padding:0 var(--pad);gap:4px}
-.menu nav a{font-size:clamp(34px,5vw,72px);text-transform:uppercase;line-height:1;display:flex;gap:18px;align-items:baseline;opacity:0;transform:translateX(60px);transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1),color .3s}
-.menu nav a small{font-size:12px;font-weight:600;letter-spacing:.16em;color:var(--acid)}
-.menu nav a:hover{color:var(--acid)}
-.menu nav a.hl::after{content:"NEW";font-size:11px;font-weight:600;letter-spacing:.14em;background:var(--acid);color:var(--ink);padding:4px 6px;border-radius:4px;align-self:center}
-body.menu .menu nav a{opacity:1;transform:none}
-.menu aside{position:relative;overflow:hidden;margin:24px;border-radius:10px}
-.menu aside img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
-body.menu .menu aside img{transform:scale(1)}
-.menu aside .soc{position:absolute;left:20px;right:20px;bottom:20px;display:flex;gap:10px;flex-wrap:wrap}
+.menu{position:fixed;inset:0 var(--rail) 0 0;z-index:94;pointer-events:none}
+.m-veil{position:absolute;inset:0;background:rgba(7,9,14,.55);opacity:0;transition:opacity .6s;cursor:pointer}
+.m-panel{position:absolute;top:0;right:0;bottom:0;width:min(600px,48vw);background:var(--pale);color:var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:42px clamp(26px,3vw,44px) 34px;overflow-y:auto;transform:translateX(101%);transition:transform .8s cubic-bezier(.7,0,.2,1)}
+body.menu-open .menu{pointer-events:auto}
+body.menu-open .m-veil{opacity:1}
+body.menu-open .m-panel{transform:none}
+.m-claim{font-size:clamp(18px,1.6vw,24px);text-transform:uppercase;line-height:1.1;letter-spacing:-.005em}
+.menu nav{display:flex;flex-direction:column}
+.menu nav a{display:flex;gap:16px;align-items:baseline;padding:15px 0 13px;border-bottom:1px solid rgba(15,18,26,.35);font-size:clamp(19px,1.6vw,24px);line-height:1.1;opacity:0;transform:translateX(40px);transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1),padding .35s cubic-bezier(.2,.8,.2,1)}
+.menu nav a small{font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--mute);min-width:22px}
+.menu nav a:hover{padding-left:10px}
+.menu nav a.hl::after{content:"NEW";font-size:10px;font-weight:600;letter-spacing:.14em;background:var(--ink);color:var(--acid);padding:4px 6px;border-radius:4px;align-self:center}
+body.menu-open .menu nav a{opacity:1;transform:none}
+.m-soc{display:flex;gap:10px 26px;flex-wrap:wrap;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.m-soc a:hover{text-decoration:underline;text-underline-offset:3px}
 
 /* logo */
 .logo img{height:15px;width:auto}
@@ -89,7 +92,7 @@ body.menu .menu aside img{transform:scale(1)}
 #veil{position:fixed;inset:0;z-index:55;background:rgba(7,9,14,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .6s}
 body.focus #veil{opacity:1}
 body.focus #gl{z-index:60}
-#biblio{position:relative;height:100vh;min-height:640px;pointer-events:none}
+#biblio{position:relative;height:calc(100vh + clamp(90px,14vh,160px));min-height:740px;pointer-events:none}
 #biblio .mq{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;justify-content:center;gap:.6vw;overflow:hidden}
 .mq-row{display:flex;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:clamp(70px,12vw,210px);letter-spacing:-.02em;line-height:.9;will-change:transform}
 .mq-row span{padding-right:.3em}
@@ -188,8 +191,8 @@ body.focus .focus-hint{opacity:1}
   :root{--rail:0px}
   .rail{top:auto;left:auto;right:14px;bottom:auto;top:14px;width:48px;height:48px;padding:0;border:1px solid var(--line);border-radius:8px;justify-content:center}
   .rail .vt,.rail .rp{display:none}
-  .menu{inset:0;grid-template-columns:1fr}
-  .menu aside{display:none}
+  .menu{inset:0}
+  .m-panel{width:100%;padding-top:84px}
   .b-top .lede,.hint{display:none}
   .hero-bar{grid-template-columns:auto 1fr;gap:14px}
   .hb-ctrl{grid-column:1/-1}.hb-ctrl .pill{flex:1;justify-content:center}

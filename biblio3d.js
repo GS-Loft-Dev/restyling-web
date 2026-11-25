@@ -155,6 +155,7 @@ function layout() {
   const lz = mob ? 3.2 : 5.3, ld = camZ - lz;
   const rs = mob ? .74 : .6 * Math.min(1.1, Math.sqrt(asp / 1.7));
   const ringY = +(canvas.dataset.ringY || 0);
+  pxW = vh(camZ) / h; // unità 3D per pixel sul piano dell'anello
   L = { mob, R: mob ? 3.3 : 4.9 * rs / .75, ringC: new THREE.Vector3(0, mob ? .55 : .5 + ringY, 0), ringS: rs,
     libro: mob ? new THREE.Vector3(0, vh(ld) * .2, lz) : new THREE.Vector3(vw(ld) * .19, -.05, lz),
     libroS: mob ? .85 : Math.min(1.05, vh(ld) * .7 / H),
@@ -165,7 +166,7 @@ function layout() {
 
 /* ---------- stato ---------- */
 let ringRot = 0, snapT = 0, ringVel = 0, dragging = false, lastX = 0, lastT = 0, moved = 0, idle = 0, hover = -1, focus = -1, focusT = 0, spin = 0, spinTarget = 0, closeT = 9;
-let heroOut = 0, pLibro = 0, started = false;
+let heroOut = 0, pLibro = 0, started = false, ringShift = 0, pxW = 0;
 const mouse = new THREE.Vector2(9, 9), mSmooth = new THREE.Vector2(), V0 = new THREE.Vector2();
 const ray = new THREE.Raycaster();
 const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -178,6 +179,7 @@ const vA = new THREE.Vector3(), qA = new THREE.Quaternion(), qB = new THREE.Quat
 function target(i, t) {
   const a = i * STEP + ringRot;
   const p = new THREE.Vector3(Math.sin(a) * L.R, Math.sin(t * .9 + i * 1.3) * .07, Math.cos(a) * L.R).applyAxisAngle(X, .1).add(L.ringC);
+  p.y -= ringShift; // l'anello scorre con la sezione finché non è in posizione
   eA.set(.1 + Math.sin(t * .6 + i) * .03, a, Math.sin(t * .5 + i * 2) * .025); const q = new THREE.Quaternion().setFromEuler(eA);
   let s = L.ringS, open = 0;
   if (i === frontIdx() && focus < 0) { s *= 1.08; p.z += .25; }
@@ -288,20 +290,23 @@ canvas.addEventListener('click', e => {
 canvas.addEventListener('pointerleave', () => { if (!dragging) mouse.set(9, 9); hover = -1; setCursor(null); });
 
 /* ---------- scroll ---------- */
-let libroTop = 0, libroH = 1, endTop = 1e9, ringTop = 0;
+let libroTop = 0, libroH = 1, endTop = 1e9, ringTop = 0, stageTop = 0;
 const steps = [...document.querySelectorAll('.step')], progB = [...document.querySelectorAll('.prog b')];
 const absTop = el => { let y = 0; for (let e = el; e; e = e.offsetParent) y += e.offsetTop; return y; };
 function measure() {
   const r = $('#biblio'); ringTop = absTop(r);
+  // se la sezione è più alta dello schermo, la parte in più sta sopra (titolo): l'anello si ferma dopo
+  stageTop = ringTop + Math.max(0, r.offsetHeight - innerHeight);
   if (hasLibro) { const l = $('#libro'); libroTop = absTop(l); libroH = l.offsetHeight; }
-  const end = $('#biblioteca'); endTop = end ? absTop(end) : ringTop + r.offsetHeight;
+  const end = $('#biblioteca'); endTop = end ? absTop(end) : hasLibro ? libroTop + libroH : ringTop + r.offsetHeight;
 }
 addEventListener('st-refresh', () => { measure(); onScroll(); });
-const ringInView = () => scrollY + innerHeight * .5 > ringTop && scrollY < ringTop + innerHeight * .5;
+const ringInView = () => scrollY + innerHeight * .5 > ringTop && scrollY < stageTop + innerHeight * .5;
 const inRange = () => scrollY + innerHeight > ringTop - 80 && scrollY < endTop + 20;
 function onScroll() {
   const y = scrollY, h = innerHeight;
-  heroOut = clamp((y - ringTop) / (h * .9));
+  heroOut = clamp((y - stageTop) / (h * .9));
+  ringShift = Math.max(0, stageTop - y) * pxW;
   if (hasLibro) {
     pLibro = clamp((y - libroTop) / (libroH - h));
     const si = Math.min(2, Math.floor(pLibro * 3.2)); steps.forEach((s, k) => s.classList.toggle('on', k === si));

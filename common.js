@@ -19,15 +19,16 @@
   const go = sel => { const t = $(sel); if (t) lenis.scrollTo(t, { duration: 1.6, easing: x => 1 - Math.pow(1 - x, 4) }); };
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-to]'); if (!a) return;
-    e.preventDefault(); closeMenu(); setTimeout(() => go(a.dataset.to), document.body.classList.contains('menu') ? 500 : 0);
+    e.preventDefault(); closeMenu(); setTimeout(() => go(a.dataset.to), document.body.classList.contains('menu-open') ? 500 : 0);
   });
 
   /* menu */
-  const closeMenu = () => { if (!document.body.classList.contains('menu')) return; document.body.classList.remove('menu'); lenis.start(); };
+  const closeMenu = () => { if (!document.body.classList.contains('menu-open')) return; document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-hidden', 'true'); lenis.start(); };
   $('#burger') && $('#burger').addEventListener('click', () => {
-    const on = document.body.classList.toggle('menu'); on ? lenis.stop() : lenis.start();
+    const on = document.body.classList.toggle('menu-open'); on ? lenis.stop() : lenis.start(); $('#menu').setAttribute('aria-hidden', on ? 'false' : 'true');
     $$('.menu nav a').forEach((a, i) => a.style.transitionDelay = on ? (.15 + i * .05) + 's' : '0s');
   });
+  $$('#menu [data-close]').forEach(el => el.addEventListener('click', closeMenu));
   addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
   // barra di avanzamento nella barra verticale
   const rp = $('#railP');

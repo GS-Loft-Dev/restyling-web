@@ -1,26 +1,6 @@
 /* Pagina principale. Usa common.js (window.SG) e i dati dei libri. Il 3D è in biblio3d.js. */
-import { BOOKS, euro } from './books.js';
-const { lenis, $, $$, reveal, magnet, tiltBook, bookHtml } = window.SG;
+const { lenis, $, $$, reveal, magnet } = window.SG;
 const mm = gsap.matchMedia();
-
-/* ---------- griglia dei prodotti (veri, dallo shop) ---------- */
-const grid = $('#grid');
-BOOKS.forEach((b, i) => {
-  if (b.price == null) return;
-  const el = document.createElement('article'); el.className = 'card'; el.dataset.tag = b.cat; el.setAttribute('data-rise', '');
-  el.innerHTML = `${bookHtml(b, b.D > .14 ? 9 : 6)}
-    <div class="c-meta"><span class="lbl">${b.catLabel}</span><h3>${b.short}</h3><p>${b.sub}</p>
-    <div class="c-foot"><div class="c-price"><b>${euro(b.price)}</b>${b.compare ? `<s>${euro(b.compare)}</s>` : ''}</div><a class="pill r" href="shop/#${b.id}">Acquista <i>↗</i></a></div>
-    <button class="c-open" data-open="${i}">Sfoglia in 3D ↗</button></div>`;
-  grid.appendChild(el);
-  tiltBook(el.querySelector('.book'));
-  el.querySelector('.book').addEventListener('click', () => window.__biblio && window.__biblio.open(i));
-});
-gsap.set('#grid [data-rise]', { opacity: 0, y: 50 });
-$$('.chip').forEach(c => c.addEventListener('click', () => {
-  $$('.chip').forEach(x => x.classList.toggle('on', x === c));
-  $$('.card').forEach(el => el.classList.toggle('dim', c.dataset.f !== 'all' && el.dataset.tag !== c.dataset.f));
-}));
 
 /* ---------- la mia storia: fisarmonica ---------- */
 $$('.acc-it').forEach(it => it.querySelector('.acc-h').addEventListener('click', () => {
