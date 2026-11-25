@@ -46,7 +46,7 @@ const heroBuy = $('#heroBuy'), hbPrice = $('#hbPrice');
 addEventListener('biblio-front', e => {
   front = e.detail; const b = BOOKS[front];
   hbPrice.innerHTML = b.price == null ? '<b>Rizzoli</b><s>libro</s>' : `<b>${euro(b.price)}</b>${b.compare ? `<s>${euro(b.compare)}</s>` : ''}`;
-  heroBuy.innerHTML = b.price == null ? 'Su Amazon <i>↗</i>' : 'Aggiungi al carrello';
+  heroBuy.innerHTML = b.price == null ? 'Su Amazon <i>↗</i>' : `Aggiungi al carrello<span class="m-pr"> · ${euro(b.price)}</span>`;
 });
 heroBuy.addEventListener('click', () => { const b = BOOKS[front]; b.price == null ? open(b.buy, '_blank') : addBook(b); });
 

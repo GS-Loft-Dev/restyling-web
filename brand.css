@@ -7,12 +7,12 @@
   --sans:'Inter Tight',system-ui,-apple-system,sans-serif; --rail:56px; --pad:clamp(18px,3.2vw,48px);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--ink)}
+html{background:var(--ink);overflow-x:clip}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-stopped{overflow:hidden}
 html.intro{overflow:hidden}
-body{background:var(--ink);color:var(--paper);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--ink);color:var(--paper);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 img{display:block;max-width:100%}
@@ -194,8 +194,9 @@ body.focus .focus-hint{opacity:1}
   .menu{inset:0}
   .m-panel{width:100%;padding-top:84px}
   .b-top .lede,.hint{display:none}
+  #biblio{height:100svh;min-height:600px}
   .hero-bar{grid-template-columns:auto 1fr;gap:14px}
-  .hb-ctrl{grid-column:1/-1}.hb-ctrl .pill{flex:1;justify-content:center}
+  .hb-ctrl{grid-column:1/-1;flex-wrap:wrap}.hb-ctrl .pill{flex:1;justify-content:center}
   #libro .sticky{align-items:flex-end;padding-bottom:40px}
   .libro-copy{width:100%;background:linear-gradient(transparent,rgba(15,18,26,.94) 25%);padding-top:60px}
   .steps{height:120px}
