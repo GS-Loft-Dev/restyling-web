@@ -1,4 +1,4 @@
-/* Shop: carrello finto, sezioni dello shop vero (chat, problema/soluzione, protocolli, bundle, 60 giorni, ebook famiglia).
+/* Shop: carrello finto e sezioni essenziali (protocolli, bundle, 60 giorni, ebook famiglia, contatti).
    I libri 3D sono in ../biblio3d.js, i dati in ../books.js. */
 import { BOOKS, euro } from '../books.js';
 const { lenis, $, $$, reveal, magnet, tiltBook, bookHtml } = window.SG;
@@ -50,48 +50,16 @@ addEventListener('biblio-front', e => {
 });
 heroBuy.addEventListener('click', () => { const b = BOOKS[front]; b.price == null ? open(b.buy, '_blank') : addBook(b); });
 
-/* ---------- fascia ---------- */
-const band = gsap.to('#band', { xPercent: -50, duration: 32, ease: 'none', repeat: -1 });
-lenis.on('scroll', ({ velocity }) => band.timeScale(1 + Math.min(6, Math.abs(velocity) * .25)));
 const sbar = $('#sbar');
 lenis.on('scroll', ({ scroll }) => sbar.classList.toggle('solid', scroll > 60));
 
-/* ---------- chat ---------- */
-const msgs = $$('#msgs .msg'), typing = $('#typing');
-ScrollTrigger.create({ trigger: '#msgs', start: 'top 75%', once: true, onEnter: () => {
-  const tl = gsap.timeline();
-  tl.to(msgs[0], { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' })
-    .to(msgs[1], { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' }, '+=.7')
-    .add(() => typing.style.display = 'flex', '+=.4')
-    .add(() => typing.style.display = 'none', '+=1.4')
-    .to(msgs[2], { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' });
-} });
-
-/* ---------- problema / soluzione ---------- */
-const sw = $('#sw'), panes = $$('.ps-pane');
-const setP = i => { sw.classList.toggle('sol', i === 1); $$('button', sw).forEach((b, k) => b.classList.toggle('on', k === i)); panes.forEach((p, k) => p.classList.toggle('on', k === i)); };
-document.addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) setP(+b.dataset.p); });
-
 /* ---------- cosa contengono: 3 protocolli ---------- */
 const HACK = ['hack-stress', 'hack-sleep', 'hack-habits'].map(byId);
-const INTRO = {
-  'hack-stress': 'Lo stress non è il problema. Il problema è restarci dentro. Se il cortisolo resta alto, vivi in modalità sopravvivenza: energia instabile, nervosismo, recupero bloccato.',
-  'hack-sleep': 'Dormire non basta. Se il tuo sonno è superficiale, ti svegli stanco e resti in allarme anche di notte. Hack your Sleep trasforma il sonno da semplice pausa a vera fonte di rigenerazione.',
-  'hack-habits': 'Le tue abitudini decidono chi sei. Se sono sbagliate, consolidano stanchezza, disordine e confusione mentale. Hack your Habits trasforma la tua routine in leve di energia e lucidità.',
-};
-const WHY = {
-  'hack-stress': 'Non teoria, ma pratiche concrete da applicare subito. Ogni giorno hai azioni mirate che calmano il sistema nervoso e ti riportano in equilibrio.',
-  'hack-sleep': 'Non è teoria, ma pratica quotidiana. Ogni giorno hai azioni precise, supportate da evidenze scientifiche, che trasformano il sonno in un’arma per performance e longevità.',
-  'hack-habits': 'Non è motivazione teorica. È un percorso fatto di micro-azioni quotidiane, semplici ma trasformative, che riorganizzano corpo e mente passo dopo passo.',
-};
 const tabs = $('#tabs'), ccBook = $('#ccBook'), ccPanes = $('#ccPanes');
 HACK.forEach((b, i) => {
   tabs.insertAdjacentHTML('beforeend', `<button class="tab${i ? '' : ' on'}" data-tab="${i}">${b.short}</button>`);
   ccPanes.insertAdjacentHTML('beforeend', `<div class="cc-pane${i ? '' : ' on'}">
-    <p class="intro">${INTRO[b.id]}</p>
-    <div class="cc-cols"><div class="box"><h4>Cosa trovi dentro</h4><ul>${b.chapters.map(c => `<li>${c}</li>`).join('')}</ul></div>
-    <div class="box res"><h4>Risultati che puoi aspettarti</h4><ul>${b.results.map(c => `<li>${c}</li>`).join('')}</ul></div></div>
-    <div class="why"><b>Perché funziona</b><span>${WHY[b.id]}</span></div>
+    <div class="box"><ul>${b.chapters.map(c => `<li>${c}</li>`).join('')}</ul></div>
     <div class="buyrow"><div class="pr"><b>${euro(b.price)}</b><s>${euro(b.compare)}</s></div><button class="pill lg" data-add="${b.id}">Aggiungi al carrello</button><button class="pill ghost lg" style="color:var(--ink);box-shadow:inset 0 0 0 1px var(--lineD)" data-open="${BOOKS.indexOf(b)}">Sfoglia in 3D</button></div></div>`);
 });
 ccBook.innerHTML = bookHtml(HACK[0], 8); tiltBook(ccBook.querySelector('.book'));
@@ -125,7 +93,6 @@ const p60 = $('#p60');
 ['60x-burn', '60x-build', '60x-revive'].map(byId).forEach(b => {
   const el = document.createElement('article'); el.className = 'item'; el.setAttribute('data-rise', '');
   el.innerHTML = `<div class="stage">${bookHtml(b, 9)}</div><div><span class="lbl muted">${b.catLabel}</span><h3 style="margin-top:8px">${b.short}</h3></div>
-    <p class="sub">${b.sub}</p><ul>${b.chapters.map(c => `<li>${c}</li>`).join('')}</ul>
     <div class="foot"><div class="pr"><b>${euro(b.price)}</b><s>${euro(b.compare)}</s></div><span class="off">−54%</span><button class="pill" data-add="${b.id}">Aggiungi</button></div>`;
   p60.appendChild(el); tiltBook(el.querySelector('.book'));
   el.querySelector('.stage').addEventListener('click', () => window.__biblio && window.__biblio.open(BOOKS.indexOf(b)));

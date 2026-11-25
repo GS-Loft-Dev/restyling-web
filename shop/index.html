@@ -31,59 +31,17 @@
 .hb-price b{font-weight:400;font-size:26px}
 .hb-price s{color:var(--mute);font-size:13px}
 
-/* ---------- fascia ---------- */
-.band{position:relative;z-index:2;background:var(--acid);color:var(--ink);overflow:hidden;padding:18px 0}
-.band .trk{display:flex;white-space:nowrap;font-size:clamp(26px,3vw,46px);text-transform:uppercase;will-change:transform}
-.band .trk span{padding-right:.5em}
-.band .trk i{font-style:normal;opacity:.35}
-
 /* ---------- sezioni ---------- */
 .s{position:relative;z-index:2;padding:110px var(--pad)}
 .s.light{background:var(--paper);color:var(--ink)}
 .s.pale{background:var(--pale);color:var(--ink)}
 .s.dark{background:var(--ink)}
-.s-head{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:end;margin-bottom:56px}
+.s-head{display:grid;grid-template-columns:1fr;gap:40px;align-items:end;margin-bottom:56px}
 .s-head p{max-width:460px;justify-self:end;color:#4a5060}
 .s.dark .s-head p{color:#aeb3bf}
 .s.light .muted,.s.pale .muted{color:#5a6070}
 
-/* chat */
-.chat{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.phone{background:#0b0e15;border-radius:28px;padding:22px 18px;max-width:420px;border:1px solid var(--line);box-shadow:0 40px 80px rgba(0,0,0,.4)}
-.phone .ph-top{display:flex;gap:12px;align-items:center;padding:0 4px 16px;border-bottom:1px solid var(--line);margin-bottom:16px}
-.phone .ph-top img{width:38px;height:38px;border-radius:50%;object-fit:cover}
-.phone .ph-top b{font-weight:600;font-size:14px;display:block}
-.phone .ph-top span{font-size:11.5px;color:#5fd38a}
-.msgs{display:flex;flex-direction:column;gap:10px;min-height:330px}
-.msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.4;opacity:0;transform:translateY(14px) scale(.96);transform-origin:left bottom}
-.msg small{display:block;font-size:10px;opacity:.55;margin-top:4px}
-.msg.me{align-self:flex-end;background:var(--acid);color:var(--ink);border-bottom-right-radius:4px;transform-origin:right bottom}
-.msg.gs{background:#1d2230;border-bottom-left-radius:4px}
-.typing{align-self:flex-start;display:none;gap:4px;padding:12px 14px;background:#1d2230;border-radius:14px}
-.typing i{width:6px;height:6px;border-radius:50%;background:#aeb3bf;animation:ty 1s infinite}
-.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-@keyframes ty{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
-.chat-copy p{font-size:clamp(19px,1.7vw,24px);line-height:1.35;margin:22px 0 28px;max-width:560px}
-
-/* problema / soluzione */
-.ps{display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden;min-height:520px}
-.ps-ph{position:relative;overflow:hidden}
-.ps-ph img{position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover}
-.ps-r{background:var(--ink);color:var(--paper);padding:40px;display:flex;flex-direction:column}
-.sw{display:inline-grid;grid-template-columns:1fr 1fr;background:#1d2230;border-radius:6px;padding:4px;position:relative;align-self:flex-start;margin-bottom:34px}
-.sw button{position:relative;z-index:1;color:#c9cdd6;padding:10px 18px 9px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:color .35s}
-.sw i{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:var(--acid);border-radius:4px;transition:transform .55s cubic-bezier(.7,0,.2,1)}
-.sw.sol i{transform:translateX(100%)}
-.sw button.on{color:var(--ink)}
-.sw button:not(.on):hover{color:var(--paper)}
-.ps-pane{display:none}
-.ps-pane.on{display:block;animation:paneIn .7s cubic-bezier(.2,.8,.2,1)}
 @keyframes paneIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.ps-pane h3{margin-bottom:20px}
-.ps-pane ul{list-style:none;display:grid;gap:12px;margin-bottom:28px}
-.ps-pane li{padding:14px 16px;border:1px solid var(--line);border-radius:8px;font-size:15.5px}
-.ps-pane li b{color:var(--acid);font-weight:500}
-.ps-pane p{font-size:17px;color:#cfd3db;margin-bottom:24px;max-width:520px}
 
 /* cosa contengono */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
@@ -94,16 +52,12 @@
 .cc-book .book{max-width:320px;margin:0 auto}
 .cc-pane{display:none}
 .cc-pane.on{display:block;animation:paneIn .7s cubic-bezier(.2,.8,.2,1)}
-.cc-pane .intro{font-size:clamp(19px,1.6vw,23px);line-height:1.4;margin-bottom:30px}
-.cc-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.cc-pane .box{margin-bottom:24px}
 .box{background:#fff;border-radius:10px;padding:22px;border:1px solid var(--lineD)}
 .box h4{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
 .box ul{list-style:none;display:grid;gap:10px}
 .box li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:14.5px;line-height:1.4}
 .box li::before{content:"";width:16px;height:16px;margin-top:2px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23f1ff62' stroke-width='2'/%3E%3C/svg%3E") center/12px no-repeat}
-.box.res li::before{background:var(--acid) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2l1.6 4.4L14 8l-4.4 1.6L8 14l-1.6-4.4L2 8l4.4-1.6z' fill='%230f121a'/%3E%3C/svg%3E") center/12px no-repeat}
-.why{display:flex;gap:16px;align-items:flex-start;background:var(--ink);color:var(--paper);border-radius:10px;padding:22px;margin-bottom:22px}
-.why b{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);white-space:nowrap;padding-top:3px}
 .buyrow{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .buyrow .pr{display:flex;align-items:baseline;gap:10px}
 .buyrow .pr b{font-weight:400;font-size:34px}
@@ -138,9 +92,6 @@
 .p60 .stage{background:linear-gradient(180deg,#f0f1f6,#e3e5ee);border-radius:8px;padding:26px 40px 30px;cursor:pointer}
 .p60 .stage .book{max-width:220px;margin:0 auto}
 .p60 h3{font-weight:400;text-transform:uppercase;font-size:30px;line-height:1}
-.p60 .sub{color:#4a5060;font-size:14.5px}
-.p60 ul{list-style:none;display:grid;gap:6px;font-size:14px}
-.p60 li::before{content:"✓";color:var(--ink);font-weight:600;margin-right:8px}
 .p60 .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--lineD)}
 .p60 .foot .pr b{font-weight:400;font-size:28px}
 .p60 .foot .pr s{color:#6b7182;margin-left:6px}
@@ -218,18 +169,10 @@ body.cart-open .cart-veil{opacity:1;pointer-events:auto}
   /* sezioni */
   .s{padding:76px var(--pad)}
   .s-head{gap:16px;margin-bottom:32px}
-  .s-head,.chat,.ps,.cc,.bundle,.fam,.contact,.cc-cols{grid-template-columns:1fr}
+  .s-head,.cc,.bundle,.fam,.contact{grid-template-columns:1fr}
   .s-head p{justify-self:start}
   .d1{font-size:clamp(40px,12.5vw,60px)}
   .d2{font-size:clamp(34px,10vw,48px)}
-  .chat{gap:40px}
-  .chat-copy p{font-size:18px}
-  .phone{max-width:none;border-radius:22px;padding:18px 14px}
-  .msgs{min-height:0}
-  .ps-ph{min-height:260px}
-  .ps-r{padding:26px 20px}
-  .sw{align-self:stretch;margin-bottom:26px}
-  .ps-pane li{font-size:15px;padding:12px 14px}
 
   /* schede scorrevoli col dito */
   .tabs{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(-1 * var(--pad)) 26px;padding:0 var(--pad)}
@@ -239,7 +182,6 @@ body.cart-open .cart-veil{opacity:1;pointer-events:auto}
   .cc-book{position:relative;top:0;padding:22px}
   .cc-book .book{max-width:190px}
   .box{padding:18px}
-  .why{flex-direction:column;gap:8px}
   .buyrow .pill{flex:1 1 auto;justify-content:center}
 
   .bundle{gap:30px}
@@ -304,18 +246,12 @@ body.cart-open .toast{opacity:0}
 <main>
 <!-- HERO: LIBRERIA 3D -->
 <section id="biblio">
-  <div class="mq" aria-hidden="true">
-    <div class="mq-row r1"><span>Hack your stress · hack your sleep · hack your habits ·</span><span>Hack your stress · hack your sleep · hack your habits ·</span></div>
-    <div class="mq-row r2"><span>60×burn · 60×build · 60×revive ·</span><span>60×burn · 60×build · 60×revive ·</span></div>
-  </div>
   <div class="b-top">
     <div class="b-head">
       <p class="lbl k"><i></i>Shop · Download immediato</p>
       <h1 class="disp d2" data-split>Scarica.<br>Applica.<br>Trasformati.</h1>
     </div>
-    <p class="lede"><b>I protocolli digitali firmati Giacomo Spazzini.</b> Scaricali subito, applicali ogni giorno, trasformati in 30 giorni.</p>
   </div>
-  <div class="hint"><span>Trascina per girare</span><span>Clicca per sfogliare</span><span>Scorri</span></div>
   <div class="hero-bar">
     <div class="hb-count"><b id="hbN">00</b><span>/ 07</span></div>
     <div class="hb-info"><span class="lbl" id="hbP">Il libro · Rizzoli</span><strong id="hbT">Il Metodo Spazzini</strong></div>
@@ -329,52 +265,9 @@ body.cart-open .toast{opacity:0}
   </div>
 </section>
 
-<div class="band"><div class="trk" id="band"><span>Hack your stress <i>✦</i> Hack your sleep <i>✦</i> Hack your habits <i>✦</i> 60×burn <i>✦</i> 60×build <i>✦</i> 60×revive <i>✦</i></span><span>Hack your stress <i>✦</i> Hack your sleep <i>✦</i> Hack your habits <i>✦</i> 60×burn <i>✦</i> 60×build <i>✦</i> 60×revive <i>✦</i></span></div></div>
-
-<!-- CHAT -->
-<section class="s dark" id="chat">
-  <div class="chat">
-    <div class="chat-copy">
-      <p class="lbl" style="color:var(--acid)">Sblocca il tuo potenziale</p>
-      <h2 class="disp d1" style="margin-top:14px" data-split>Basta<br>sopravvivere.</h2>
-      <p data-rise>Tre protocolli applicati con criterio e smetti di rincorrere la giornata. Lo stress cala, dormi correttamente e ritrovi l'equilibrio: più energia, più focus e più risposta dal corpo.</p>
-      <a class="pill lg" href="#bundle" data-to="#bundle" data-rise>Acquista ora <i>↓</i></a>
-    </div>
-    <div class="phone" data-rise>
-      <div class="ph-top"><img src="assets/giacomo.jpg" alt=""><div><b>Giacomo Spazzini</b><span>online</span></div></div>
-      <div class="msgs" id="msgs">
-        <div class="msg gs">Hey 👋<br>Vuoi finalmente dormire meglio, ridurre lo stress e costruire abitudini sane?<small>1m fa</small></div>
-        <div class="msg me">Sì! Ma non so da dove partire… puoi aiutarmi?<small>1m fa</small></div>
-        <div class="typing" id="typing"><i></i><i></i><i></i></div>
-        <div class="msg gs">Assolutamente. Ho creato 3 protocolli pratici da 30 giorni per stress, sonno e abitudini. Scaricali subito e inizia oggi!<br>Dopo mi ringrazi. 😎<small>ora</small></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROBLEMA / SOLUZIONE -->
-<section class="s light" id="ps">
-  <div class="ps">
-    <div class="ps-ph"><img src="assets/runner.jpg" alt="" data-par></div>
-    <div class="ps-r">
-      <div class="sw" id="sw"><i></i><button class="on" data-p="0">Problema</button><button data-p="1">Soluzione</button></div>
-      <div class="ps-pane on">
-        <h3 class="disp d2">Allenarti e mangiare bene non basta.</h3>
-        <ul><li>Se il <b>cortisolo</b> resta alto, resti in modalità sopravvivenza.</li><li>Se il <b>sonno</b> è superficiale, non recuperi mai davvero.</li><li>Se vivi di <b>abitudini</b> sbagliate, resterai bloccato.</li></ul>
-        <button class="pill lg" data-p="1">Vedi la soluzione <i>→</i></button>
-      </div>
-      <div class="ps-pane">
-        <h3 class="disp d2">Basta sopravvivere!</h3>
-        <p>È il momento di riprendere il controllo, vivere con energia e ottenere risultati reali. Con questi protocolli non aspetti mesi: <b style="color:var(--acid);font-weight:500">in 30 giorni resetti corpo e mente.</b></p>
-        <a class="pill lg" href="#bundle" data-to="#bundle">Acquista ora <i>↓</i></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- COSA CONTENGONO -->
 <section class="s pale" id="contengono">
-  <div class="s-head"><h2 class="disp d1" data-split>Ma cosa<br>contengono?</h2><p>Tre protocolli pratici da 30 giorni: azioni quotidiane, supportate da evidenze scientifiche, da applicare subito.</p></div>
+  <div class="s-head"><h2 class="disp d1" data-split>Protocolli<br>da 30 giorni.</h2></div>
   <div class="tabs" id="tabs"></div>
   <div class="cc"><div class="cc-book" id="ccBook"></div><div id="ccPanes"></div></div>
 </section>
@@ -384,7 +277,7 @@ body.cart-open .toast{opacity:0}
   <div class="bundle">
     <div class="bundle-ph" data-reveal><img src="assets/bundle-hack.jpg" alt="Bundle Hack your Stress, Sleep, Habits"></div>
     <div>
-      <p class="lbl muted">Bundle · Protocolli stress, sonno e abitudini</p>
+      <p class="lbl muted">Bundle</p>
       <h2 class="disp d2" style="margin-top:14px" data-split>Prendine tre,<br>uno è omaggio.</h2>
       <div class="opts" id="opts">
         <button class="opt" data-n="1"><i class="dot"></i><div><b>Programma singolo</b><span>Un protocollo a scelta</span></div><div class="pp"><strong>€39,90</strong><s>€59,90</s></div></button>
@@ -399,7 +292,7 @@ body.cart-open .toast{opacity:0}
 
 <!-- PROGRAMMI 60 GIORNI -->
 <section class="s pale" id="programmi60">
-  <div class="s-head"><h2 class="disp d1" data-split>Programmi<br>da 60 giorni.</h2><p>Percorsi guidati e intensivi: piani alimentari per uomini e donne, allenamento a casa o in palestra, integrazione, checklist e sconti esclusivi GS LOFT.</p></div>
+  <div class="s-head"><h2 class="disp d1" data-split>Programmi<br>da 60 giorni.</h2></div>
   <div class="p60" id="p60"></div>
 </section>
 
@@ -410,7 +303,7 @@ body.cart-open .toast{opacity:0}
     <div>
       <p class="lbl muted">Ebook · Famiglia</p>
       <h2 class="disp d2" style="margin-top:14px" data-split>Come ho insegnato<br>a mio figlio<br>a mangiare sano.</h2>
-      <p>Il metodo pratico e naturale per far amare il cibo sano ai tuoi figli, senza battaglie a tavola e senza imposizioni. Un ebook completo con strategie testate, ricette e consigli pratici per trasformare l'alimentazione della tua famiglia.</p>
+      <p>Far amare il cibo sano ai tuoi figli, senza imposizioni.</p>
       <div class="buyrow"><div class="pr"><b>€59,99</b></div><button class="pill lg" data-add="figlio">Aggiungi al carrello</button><button class="pill ghost lg" style="color:var(--ink);box-shadow:inset 0 0 0 1px var(--lineD)" data-open="7">Sfoglia in 3D</button></div>
     </div>
   </div>
@@ -419,7 +312,7 @@ body.cart-open .toast{opacity:0}
 <!-- CONTATTI -->
 <section class="s dark" id="contatti">
   <div class="contact">
-    <div><h2 class="disp d1" data-split>Vuoi saperne<br>di più?</h2><p class="muted" style="margin-top:20px;max-width:420px">Scrivici: ti rispondiamo noi del team di Giacomo Spazzini.</p></div>
+    <div><h2 class="disp d1" data-split>Domande?</h2></div>
     <form class="form" id="cform">
       <div class="f"><label>Nome</label><input required></div>
       <div class="f"><label>E-mail</label><input type="email" required></div>
