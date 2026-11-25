@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop · Giacomo Spazzini — restyling (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../brand.css">
+<style>
+/* ---------- barra in alto dello shop ---------- */
+.sbar{position:fixed;top:0;left:0;right:var(--rail);z-index:80;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);pointer-events:none;transition:background .4s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.sbar>*{pointer-events:auto}
+.sbar.solid{background:rgba(15,18,26,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.sbar .l{display:flex;gap:16px;align-items:center}
+.sbar .tag{font-size:11px;font-weight:600;letter-spacing:.16em;padding:5px 8px;border-radius:4px;background:var(--acid);color:var(--ink)}
+.sbar .back{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#c9cdd6}
+.sbar .back:hover{color:var(--acid)}
+.cartbtn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px 9px;border-radius:5px;border:1px solid var(--line);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:background .3s,color .3s}
+.cartbtn:hover{background:var(--paper);color:var(--ink)}
+.cartbtn b{min-width:20px;height:20px;border-radius:10px;background:var(--acid);color:var(--ink);display:grid;place-items:center;font-size:11px;letter-spacing:0;transition:transform .4s cubic-bezier(.2,2,.4,1)}
+.cartbtn.bump b{transform:scale(1.5)}
+
+/* ---------- hero = libreria 3D ---------- */
+#biblio .b-top{top:96px}
+.b-head .k{display:flex;gap:10px;align-items:center;color:var(--acid);margin-bottom:12px}
+.b-head .k i{width:8px;height:8px;border-radius:50%;background:var(--acid);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(241,255,98,.6)}70%{box-shadow:0 0 0 10px rgba(241,255,98,0)}100%{box-shadow:0 0 0 0 rgba(241,255,98,0)}}
+.hb-price{display:flex;flex-direction:column;align-items:flex-end;margin-right:8px;line-height:1.05}
+.hb-price b{font-weight:400;font-size:26px}
+.hb-price s{color:var(--mute);font-size:13px}
+
+/* ---------- fascia ---------- */
+.band{position:relative;z-index:2;background:var(--acid);color:var(--ink);overflow:hidden;padding:18px 0}
+.band .trk{display:flex;white-space:nowrap;font-size:clamp(26px,3vw,46px);text-transform:uppercase;will-change:transform}
+.band .trk span{padding-right:.5em}
+.band .trk i{font-style:normal;opacity:.35}
+
+/* ---------- sezioni ---------- */
+.s{position:relative;z-index:2;padding:110px var(--pad)}
+.s.light{background:var(--paper);color:var(--ink)}
+.s.pale{background:var(--pale);color:var(--ink)}
+.s.dark{background:var(--ink)}
+.s-head{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:end;margin-bottom:56px}
+.s-head p{max-width:460px;justify-self:end;color:#4a5060}
+.s.dark .s-head p{color:#aeb3bf}
+
+/* chat */
+.chat{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.phone{background:#0b0e15;border-radius:28px;padding:22px 18px;max-width:420px;border:1px solid var(--line);box-shadow:0 40px 80px rgba(0,0,0,.4)}
+.phone .ph-top{display:flex;gap:12px;align-items:center;padding:0 4px 16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.phone .ph-top img{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.phone .ph-top b{font-weight:600;font-size:14px;display:block}
+.phone .ph-top span{font-size:11.5px;color:#5fd38a}
+.msgs{display:flex;flex-direction:column;gap:10px;min-height:330px}
+.msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.4;opacity:0;transform:translateY(14px) scale(.96);transform-origin:left bottom}
+.msg small{display:block;font-size:10px;opacity:.55;margin-top:4px}
+.msg.me{align-self:flex-end;background:var(--acid);color:var(--ink);border-bottom-right-radius:4px;transform-origin:right bottom}
+.msg.gs{background:#1d2230;border-bottom-left-radius:4px}
+.typing{align-self:flex-start;display:none;gap:4px;padding:12px 14px;background:#1d2230;border-radius:14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#aeb3bf;animation:ty 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes ty{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.chat-copy p{font-size:clamp(19px,1.7vw,24px);line-height:1.35;margin:22px 0 28px;max-width:560px}
+
+/* problema / soluzione */
+.ps{display:grid;grid-template-columns:1fr 1fr;border-radius:10px;overflow:hidden;min-height:520px}
+.ps-ph{position:relative;overflow:hidden}
+.ps-ph img{position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover}
+.ps-r{background:var(--ink);padding:40px;display:flex;flex-direction:column}
+.sw{display:inline-grid;grid-template-columns:1fr 1fr;background:#1d2230;border-radius:6px;padding:4px;position:relative;align-self:flex-start;margin-bottom:34px}
+.sw button{position:relative;z-index:1;padding:10px 18px 9px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:color .35s}
+.sw i{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:var(--acid);border-radius:4px;transition:transform .55s cubic-bezier(.7,0,.2,1)}
+.sw.sol i{transform:translateX(100%)}
+.sw button.on{color:var(--ink)}
+.ps-pane{display:none}
+.ps-pane.on{display:block;animation:paneIn .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes paneIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.ps-pane h3{margin-bottom:20px}
+.ps-pane ul{list-style:none;display:grid;gap:12px;margin-bottom:28px}
+.ps-pane li{padding:14px 16px;border:1px solid var(--line);border-radius:8px;font-size:15.5px}
+.ps-pane li b{color:var(--acid);font-weight:500}
+.ps-pane p{font-size:17px;color:#cfd3db;margin-bottom:24px;max-width:520px}
+
+/* cosa contengono */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+.tab{padding:12px 16px 11px;border-radius:5px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;box-shadow:inset 0 0 0 1px var(--lineD);transition:.3s}
+.tab.on{background:var(--ink);color:var(--acid);box-shadow:none}
+.cc{display:grid;grid-template-columns:.8fr 1.2fr;gap:60px;align-items:start}
+.cc-book{position:sticky;top:110px;padding:30px;background:#e9ebf3;border-radius:10px}
+.cc-book .book{max-width:320px;margin:0 auto}
+.cc-pane{display:none}
+.cc-pane.on{display:block;animation:paneIn .7s cubic-bezier(.2,.8,.2,1)}
+.cc-pane .intro{font-size:clamp(19px,1.6vw,23px);line-height:1.4;margin-bottom:30px}
+.cc-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
+.box{background:#fff;border-radius:10px;padding:22px;border:1px solid var(--lineD)}
+.box h4{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+.box ul{list-style:none;display:grid;gap:10px}
+.box li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:14.5px;line-height:1.4}
+.box li::before{content:"";width:16px;height:16px;margin-top:2px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23f1ff62' stroke-width='2'/%3E%3C/svg%3E") center/12px no-repeat}
+.box.res li::before{background:var(--acid) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 2l1.6 4.4L14 8l-4.4 1.6L8 14l-1.6-4.4L2 8l4.4-1.6z' fill='%230f121a'/%3E%3C/svg%3E") center/12px no-repeat}
+.why{display:flex;gap:16px;align-items:flex-start;background:var(--ink);color:var(--paper);border-radius:10px;padding:22px;margin-bottom:22px}
+.why b{font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--acid);white-space:nowrap;padding-top:3px}
+.buyrow{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.buyrow .pr{display:flex;align-items:baseline;gap:10px}
+.buyrow .pr b{font-weight:400;font-size:34px}
+.buyrow .pr s{color:#8a90a0}
+
+/* bundle */
+.bundle{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.bundle-ph{border-radius:10px;overflow:hidden;background:#e7e7ea;position:relative}
+.bundle-ph img{width:100%;height:auto;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.bundle-ph:hover img{transform:scale(1.04)}
+.opts{display:grid;gap:10px;margin:26px 0}
+.opt{display:grid;grid-template-columns:22px 1fr auto;gap:14px;align-items:center;text-align:left;padding:16px 18px;border-radius:10px;border:1px solid var(--lineD);background:#fff;transition:border-color .3s,box-shadow .3s,transform .3s;position:relative}
+.opt:hover{transform:translateY(-2px)}
+.opt .dot{width:20px;height:20px;border-radius:50%;border:1.5px solid #b9bdc8;position:relative}
+.opt.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.opt.on .dot{border-color:var(--ink)}
+.opt.on .dot::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--ink)}
+.opt b{font-weight:600;display:block}
+.opt span{font-size:13px;color:#5a6070}
+.opt .pp{text-align:right}
+.opt .pp strong{font-weight:400;font-size:22px;display:block}
+.opt .pp s{font-size:13px;color:#8a90a0}
+.opt .best{position:absolute;top:-10px;right:16px;background:var(--acid);color:var(--ink);font-size:10px;font-weight:600;letter-spacing:.14em;padding:4px 7px;border-radius:4px}
+.sel{display:grid;gap:8px;margin-bottom:22px}
+.sel label{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;color:#5a6070}
+.sel select{appearance:none;-webkit-appearance:none;padding:12px 14px;border-radius:6px;border:1px solid var(--lineD);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%230f121a' stroke-width='1.5'/%3E%3C/svg%3E") right 14px center/10px no-repeat;font:500 15px var(--sans);color:var(--ink)}
+
+/* programmi 60 giorni */
+.p60{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.p60 .item{background:#fff;border-radius:10px;border:1px solid var(--lineD);padding:22px;display:flex;flex-direction:column;gap:18px;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+.p60 .item:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(15,18,26,.12)}
+.p60 .stage{background:linear-gradient(180deg,#f0f1f6,#e3e5ee);border-radius:8px;padding:26px 40px 30px;cursor:pointer}
+.p60 .stage .book{max-width:220px;margin:0 auto}
+.p60 h3{font-weight:400;text-transform:uppercase;font-size:30px;line-height:1}
+.p60 .sub{color:#4a5060;font-size:14.5px}
+.p60 ul{list-style:none;display:grid;gap:6px;font-size:14px}
+.p60 li::before{content:"✓";color:var(--ink);font-weight:600;margin-right:8px}
+.p60 .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--lineD)}
+.p60 .foot .pr b{font-weight:400;font-size:28px}
+.p60 .foot .pr s{color:#8a90a0;margin-left:6px}
+.p60 .off{font-size:10.5px;font-weight:600;letter-spacing:.12em;background:var(--ink);color:var(--acid);padding:4px 7px;border-radius:4px}
+
+/* ebook famiglia */
+.fam{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.fam-ph{border-radius:10px;overflow:hidden;position:relative;aspect-ratio:1}
+.fam-ph img{width:100%;height:100%;object-fit:cover}
+.fam-ph .book{position:absolute;right:8%;bottom:8%;width:38%}
+.fam p{font-size:17px;color:#4a5060;margin:20px 0 26px;max-width:520px}
+
+/* contatti */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:60px}
+.form{display:grid;gap:6px}
+.f{display:flex;flex-direction:column;border-bottom:1px solid var(--line);padding:12px 0 8px;position:relative}
+.f::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--acid);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.f:focus-within::after{transform:scaleX(1)}
+.f label{font-size:12px;color:#aeb3bf}
+.f input,.f textarea{background:none;border:0;color:var(--paper);font:400 16px var(--sans);padding:6px 0;outline:none;resize:vertical}
+.form .pill{justify-self:start;margin-top:16px}
+.ok{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);min-height:16px;margin-top:8px}
+
+/* carrello */
+.cart{position:fixed;top:0;bottom:0;right:var(--rail);width:min(440px,100vw);z-index:97;background:var(--paper);color:var(--ink);display:flex;flex-direction:column;transform:translateX(calc(100% + var(--rail) + 40px));visibility:hidden;transition:transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s .7s;box-shadow:-30px 0 60px rgba(0,0,0,.3)}
+body.cart-open .cart{transform:none;visibility:visible;transition:transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.cart-veil{position:fixed;inset:0;z-index:96;background:rgba(7,9,14,.5);opacity:0;pointer-events:none;transition:opacity .5s}
+body.cart-open .cart-veil{opacity:1;pointer-events:auto}
+.cart-h{display:flex;justify-content:space-between;align-items:center;padding:22px 24px;border-bottom:1px solid var(--lineD)}
+.cart-h .x{border-color:var(--lineD)}
+.cart-h .x:hover{background:var(--ink);color:var(--paper)}
+.cart-list{flex:1;overflow:auto;padding:10px 24px}
+.ci{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--lineD);animation:paneIn .5s cubic-bezier(.2,.8,.2,1)}
+.ci img{width:56px;border-radius:3px;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.ci b{font-weight:500;display:block;font-size:14.5px}
+.ci span{font-size:12px;color:#5a6070}
+.qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:24px;height:24px;border-radius:4px;border:1px solid var(--lineD);font-size:14px;line-height:1}
+.ci .rm{font-size:11px;color:#8a90a0;text-decoration:underline;margin-top:6px}
+.cart-empty{padding:40px 0;color:#5a6070;text-align:center}
+.cart-f{padding:20px 24px 24px;border-top:1px solid var(--lineD);display:grid;gap:12px}
+.cart-f .tot{display:flex;justify-content:space-between;align-items:baseline}
+.cart-f .tot b{font-weight:400;font-size:30px}
+.cart-f .pill{justify-content:center;padding:16px}
+.cart-f small{color:#5a6070;text-align:center}
+.toast{position:fixed;left:50%;bottom:28px;z-index:99;transform:translate(-50%,calc(100% + 40px));opacity:0;background:var(--acid);color:var(--ink);padding:12px 16px;border-radius:6px;font-size:13px;font-weight:600;display:flex;gap:10px;align-items:center;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.toast.on{transform:translate(-50%,0);opacity:1}
+
+@media (max-width:1100px){.p60{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){
+  .sbar{right:70px}
+  .s-head,.chat,.ps,.cc,.bundle,.fam,.contact,.cc-cols{grid-template-columns:1fr}
+  .s-head p{justify-self:start}
+  .ps-ph{min-height:320px}
+  .cc-book{position:relative;top:0}
+  .p60{grid-template-columns:1fr}
+  .cart{right:0}
+  .hb-price{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="gl" data-ring-y="-.05"></canvas>
+<div id="veil"></div>
+
+<aside class="rail">
+  <button class="burger" id="burger" aria-label="Menu"><i></i><i></i></button>
+  <div class="rp"><b id="railP"></b></div>
+  <span class="vt">Shop · Protocolli digitali</span>
+</aside>
+<div class="menu" id="menu">
+  <nav>
+    <a href="#biblio" data-to="#biblio"><small>01</small>Tutti i libri</a>
+    <a href="#contengono" data-to="#contengono"><small>02</small>Hack your…</a>
+    <a href="#bundle" data-to="#bundle" class="hl"><small>03</small>Bundle</a>
+    <a href="#programmi60" data-to="#programmi60"><small>04</small>60 giorni</a>
+    <a href="#famiglia" data-to="#famiglia"><small>05</small>Famiglia</a>
+    <a href="../"><small>06</small>Sito di Giacomo</a>
+  </nav>
+  <aside><img src="assets/giacomo.jpg" alt=""></aside>
+</div>
+
+<header class="sbar" id="sbar">
+  <div class="l"><a class="logo" href="../"><img src="../assets/giacomo.svg" alt="Giacomo Spazzini"></a><span class="tag">SHOP</span></div>
+  <div class="l"><a class="back" href="../">← Sito</a><button class="cartbtn" id="cartBtn">Carrello <b id="cartN">0</b></button></div>
+</header>
+
+<main>
+<!-- HERO: LIBRERIA 3D -->
+<section id="biblio">
+  <div class="mq" aria-hidden="true">
+    <div class="mq-row r1"><span>Hack your stress · hack your sleep · hack your habits ·</span><span>Hack your stress · hack your sleep · hack your habits ·</span></div>
+    <div class="mq-row r2"><span>60×burn · 60×build · 60×revive ·</span><span>60×burn · 60×build · 60×revive ·</span></div>
+  </div>
+  <div class="b-top">
+    <div class="b-head">
+      <p class="lbl k"><i></i>Shop · Download immediato</p>
+      <h1 class="disp d2" data-split>Scarica.<br>Applica.<br>Trasformati.</h1>
+    </div>
+    <p class="lede"><b>I protocolli digitali firmati Giacomo Spazzini.</b> Scaricali subito, applicali ogni giorno, trasformati in 30 giorni.</p>
+  </div>
+  <div class="hint"><span>Trascina per girare</span><span>Clicca per sfogliare</span><span>Scorri</span></div>
+  <div class="hero-bar">
+    <div class="hb-count"><b id="hbN">00</b><span>/ 07</span></div>
+    <div class="hb-info"><span class="lbl" id="hbP">Il libro · Rizzoli</span><strong id="hbT">Il Metodo Spazzini</strong></div>
+    <div class="hb-ctrl">
+      <div class="hb-price" id="hbPrice"></div>
+      <button class="arrow" id="prev" aria-label="Precedente">←</button>
+      <button class="arrow" id="next" aria-label="Successivo">→</button>
+      <button class="pill ghost lg" id="openFront">Sfoglia <i>↗</i></button>
+      <button class="pill lg" id="heroBuy">Aggiungi al carrello</button>
+    </div>
+  </div>
+</section>
+
+<div class="band"><div class="trk" id="band"><span>Hack your stress <i>✦</i> Hack your sleep <i>✦</i> Hack your habits <i>✦</i> 60×burn <i>✦</i> 60×build <i>✦</i> 60×revive <i>✦</i></span><span>Hack your stress <i>✦</i> Hack your sleep <i>✦</i> Hack your habits <i>✦</i> 60×burn <i>✦</i> 60×build <i>✦</i> 60×revive <i>✦</i></span></div></div>
+
+<!-- CHAT -->
+<section class="s dark" id="chat">
+  <div class="chat">
+    <div class="chat-copy">
+      <p class="lbl" style="color:var(--acid)">Sblocca il tuo potenziale</p>
+      <h2 class="disp d1" style="margin-top:14px" data-split>Basta<br>sopravvivere.</h2>
+      <p data-rise>Tre protocolli applicati con criterio e smetti di rincorrere la giornata. Lo stress cala, dormi correttamente e ritrovi l'equilibrio: più energia, più focus e più risposta dal corpo.</p>
+      <a class="pill lg" href="#bundle" data-to="#bundle" data-rise>Acquista ora <i>↓</i></a>
+    </div>
+    <div class="phone" data-rise>
+      <div class="ph-top"><img src="assets/giacomo.jpg" alt=""><div><b>Giacomo Spazzini</b><span>online</span></div></div>
+      <div class="msgs" id="msgs">
+        <div class="msg gs">Hey 👋<br>Vuoi finalmente dormire meglio, ridurre lo stress e costruire abitudini sane?<small>1m fa</small></div>
+        <div class="msg me">Sì! Ma non so da dove partire… puoi aiutarmi?<small>1m fa</small></div>
+        <div class="typing" id="typing"><i></i><i></i><i></i></div>
+        <div class="msg gs">Assolutamente. Ho creato 3 protocolli pratici da 30 giorni per stress, sonno e abitudini. Scaricali subito e inizia oggi!<br>Dopo mi ringrazi. 😎<small>ora</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA / SOLUZIONE -->
+<section class="s light" id="ps">
+  <div class="ps">
+    <div class="ps-ph"><img src="assets/runner.jpg" alt="" data-par></div>
+    <div class="ps-r">
+      <div class="sw" id="sw"><i></i><button class="on" data-p="0">Problema</button><button data-p="1">Soluzione</button></div>
+      <div class="ps-pane on">
+        <h3 class="disp d2">Allenarti e mangiare bene non basta.</h3>
+        <ul><li>Se il <b>cortisolo</b> resta alto, resti in modalità sopravvivenza.</li><li>Se il <b>sonno</b> è superficiale, non recuperi mai davvero.</li><li>Se vivi di <b>abitudini</b> sbagliate, resterai bloccato.</li></ul>
+        <button class="pill lg" data-p="1">Vedi la soluzione <i>→</i></button>
+      </div>
+      <div class="ps-pane">
+        <h3 class="disp d2">Basta sopravvivere!</h3>
+        <p>È il momento di riprendere il controllo, vivere con energia e ottenere risultati reali. Con questi protocolli non aspetti mesi: <b style="color:var(--acid);font-weight:500">in 30 giorni resetti corpo e mente.</b></p>
+        <a class="pill lg" href="#bundle" data-to="#bundle">Acquista ora <i>↓</i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COSA CONTENGONO -->
+<section class="s pale" id="contengono">
+  <div class="s-head"><h2 class="disp d1" data-split>Ma cosa<br>contengono?</h2><p>Tre protocolli pratici da 30 giorni: azioni quotidiane, supportate da evidenze scientifiche, da applicare subito.</p></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="cc"><div class="cc-book" id="ccBook"></div><div id="ccPanes"></div></div>
+</section>
+
+<!-- BUNDLE -->
+<section class="s light" id="bundle">
+  <div class="bundle">
+    <div class="bundle-ph" data-reveal><img src="assets/bundle-hack.jpg" alt="Bundle Hack your Stress, Sleep, Habits"></div>
+    <div>
+      <p class="lbl muted">Bundle · Protocolli stress, sonno e abitudini</p>
+      <h2 class="disp d2" style="margin-top:14px" data-split>Prendine tre,<br>uno è omaggio.</h2>
+      <div class="opts" id="opts">
+        <button class="opt" data-n="1"><i class="dot"></i><div><b>Programma singolo</b><span>Un protocollo a scelta</span></div><div class="pp"><strong>€39,90</strong><s>€59,90</s></div></button>
+        <button class="opt" data-n="2"><i class="dot"></i><div><b>Due programmi</b><span>Risparmia 10€ extra</span></div><div class="pp"><strong>€69,80</strong><s>€119,80</s></div></button>
+        <button class="opt on" data-n="3"><i class="best">PIÙ ACQUISTATO</i><i class="dot"></i><div><b>Tre programmi</b><span>Ottienine uno omaggio</span></div><div class="pp"><strong>€79,80</strong><s>€179,70</s></div></button>
+      </div>
+      <div class="sel" id="sel"></div>
+      <button class="pill lg" id="bundleBuy">Aggiungi al carrello · €79,80</button>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMMI 60 GIORNI -->
+<section class="s pale" id="programmi60">
+  <div class="s-head"><h2 class="disp d1" data-split>Programmi<br>da 60 giorni.</h2><p>Percorsi guidati e intensivi: piani alimentari per uomini e donne, allenamento a casa o in palestra, integrazione, checklist e sconti esclusivi GS LOFT.</p></div>
+  <div class="p60" id="p60"></div>
+</section>
+
+<!-- EBOOK FAMIGLIA -->
+<section class="s light" id="famiglia">
+  <div class="fam">
+    <div class="fam-ph" data-reveal><img src="assets/food.jpg" alt=""><div id="famBook"></div></div>
+    <div>
+      <p class="lbl muted">Ebook · Famiglia</p>
+      <h2 class="disp d2" style="margin-top:14px" data-split>Come ho insegnato<br>a mio figlio<br>a mangiare sano.</h2>
+      <p>Il metodo pratico e naturale per far amare il cibo sano ai tuoi figli, senza battaglie a tavola e senza imposizioni. Un ebook completo con strategie testate, ricette e consigli pratici per trasformare l'alimentazione della tua famiglia.</p>
+      <div class="buyrow"><div class="pr"><b>€59,99</b></div><button class="pill lg" data-add="figlio">Aggiungi al carrello</button><button class="pill ghost lg" style="color:var(--ink);box-shadow:inset 0 0 0 1px var(--lineD)" data-open="7">Sfoglia in 3D</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATTI -->
+<section class="s dark" id="contatti">
+  <div class="contact">
+    <div><h2 class="disp d1" data-split>Vuoi saperne<br>di più?</h2><p class="muted" style="margin-top:20px;max-width:420px">Scrivici: ti rispondiamo noi del team di Giacomo Spazzini.</p></div>
+    <form class="form" id="cform">
+      <div class="f"><label>Nome</label><input required></div>
+      <div class="f"><label>E-mail</label><input type="email" required></div>
+      <div class="f"><label>Messaggio</label><textarea rows="3" required></textarea></div>
+      <button class="pill lg" type="submit">Invia <i>→</i></button>
+      <div class="ok" id="cOk"></div>
+    </form>
+  </div>
+</section>
+
+<footer class="sfoot">
+  <div class="soc-row"><a href="#">Termini e condizioni ↗</a><a href="#">Informativa privacy ↗</a><a href="#">Rimborsi ↗</a><a href="#contatti" data-to="#contatti">Contatti ↗</a><a href="../">Sito di Giacomo ↗</a></div>
+  <div class="big-name"><img src="../assets/giacomo.svg" alt="Giacomo Spazzini"></div>
+  <div class="fine"><span>Mockup di restyling · non ufficiale · pagamento non attivo</span><span>€ EUR · IT</span></div>
+</footer>
+</main>
+
+<!-- carrello -->
+<div class="cart-veil" id="cartVeil"></div>
+<aside class="cart" id="cart" aria-label="Carrello">
+  <div class="cart-h"><span class="lbl">Il tuo carrello</span><button class="x" id="cartX" aria-label="Chiudi">✕</button></div>
+  <div class="cart-list" id="cartList"></div>
+  <div class="cart-f"><div class="tot"><span class="lbl">Totale</span><b id="cartTot">€0</b></div><button class="pill lg" id="checkout">Vai al pagamento <i>→</i></button><small>Mockup: il pagamento non è attivo.</small></div>
+</aside>
+<div class="toast" id="toast">✓ <span id="toastT">Aggiunto</span></div>
+
+<aside id="panel" aria-hidden="true"></aside>
+<div class="focus-hint">Trascina per ruotare · ← → per cambiare libro · Esc per chiudere</div>
+<div class="cur" id="cur"><i></i><b id="curL">APRI</b></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.165.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.165.0/examples/jsm/"}}
+</script>
+<script src="../common.js"></script>
+<script type="module" src="shop.js"></script>
+<script type="module" src="../biblio3d.js"></script>
+</body>
+</html>
