@@ -12,6 +12,7 @@
 /* ---------- barra in alto dello shop ---------- */
 .sbar{position:fixed;top:0;left:0;right:var(--rail);z-index:80;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);pointer-events:none;transition:background .4s,transform .6s cubic-bezier(.2,.8,.2,1)}
 .sbar>*{pointer-events:auto}
+body.focus .sbar{opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
 .sbar.solid{background:rgba(15,18,26,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .sbar .l{display:flex;gap:16px;align-items:center}
 .sbar .tag{font-size:11px;font-weight:600;letter-spacing:.16em;padding:5px 8px;border-radius:4px;background:var(--acid);color:var(--ink)}

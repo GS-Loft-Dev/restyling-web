@@ -234,7 +234,7 @@ function target(i, t) {
       p.set(L.mob ? 0 : L.focusC, L.focusY + Math.sin(t * .9) * .03, L.focusZ);
       eA.set(.04 + mSmooth.y * .05 + spinX, -.2 + mSmooth.x * .1 + spin, 0); q.setFromEuler(eA);
       s = L.focusS; open = 0;
-    } else { p.z -= L.push; if (L.flow) s *= .001; } // su mobile gli altri libri non devono spuntare sotto quello aperto
+    } else { p.z -= L.push; s *= .001; } // gli altri libri non devono spuntare dietro a quello in primo piano
   }
   return { p, q, s, open };
 }
@@ -260,6 +260,12 @@ function fillPanel(i) {
   panel.innerHTML = `
    <div class="p-top"><span class="mono">${b.catLabel}</span><button class="x" id="pClose" aria-label="Chiudi">✕</button></div>
    <h3>${b.title.replace(/\|/g, '<br>')}</h3>
+   <div class="p-more">
+    <p class="p-sub">${b.sub}</p>
+    <div class="p-meta">${b.meta.map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>
+    <h5>${b.listTitle}</h5>
+    <ol>${b.chapters.map((c, k) => `<li style="animation-delay:${.35 + k * .06}s">${c}</li>`).join('')}</ol>
+   </div>
    <div class="p-buy">${priceHtml(b)}${buy}</div>
    <div class="p-nav"><button id="pPrev">← ${BOOKS[mod(i - 1, N)].short}</button><button id="pNext">${BOOKS[mod(i + 1, N)].short} →</button></div>`;
   $('#pClose').onclick = closeFocus; $('#pPrev').onclick = () => switchFocus(-1); $('#pNext').onclick = () => switchFocus(1);
