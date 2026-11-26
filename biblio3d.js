@@ -160,9 +160,10 @@ function mobileLayout(w, h, camZ, vh, vw) {
   L.R = R; L.ringS = s;
   L.ringC.set(0, worldY((y0 + y1) / 2, h, zf, vh, camZ), 0);
   L.flow = { z: zf, side: .74, gap: .1 * s, back: .9, half: vw(df) / 2 };
-  // libro aperto: tra l'header (o il pulsante del menu) e il pannello che sale dal basso
-  const fz = L.focusZ, fd = camZ - fz, a0 = 84, a1 = h * (1 - .52) - 14;
-  L.focusS = Math.min(vw(fd) * .88 / (2 * WR), (a1 - a0) * .86 / (h / vh(fd)) / H);
+  // libro in primo piano: tra il bordo alto (header nascosto) e il pannello che sale dal basso
+  const pn = $('#panel'), pH = pn && pn.childElementCount ? pn.offsetHeight : h * .42;
+  const fz = L.focusZ, fd = camZ - fz, a0 = 40, a1 = h - pH - 20;
+  L.focusS = Math.min(vw(fd) * .7 / WR, (a1 - a0) * .88 / (h / vh(fd)) / H);
   L.focusY = worldY((a0 + a1) / 2, h, fz, vh, camZ);
 }
 function layout() {
@@ -171,7 +172,7 @@ function layout() {
   camera.aspect = asp; camera.fov = mob ? (asp < .7 ? 52 : 44) : 34; camera.updateProjectionMatrix();
   const camZ = 11, vh = d => 2 * d * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), vw = d => vh(d) * asp;
   const fz = mob ? 2.6 : 6.3, fd = camZ - fz, pf = Math.min((480 + (w < 860 ? 0 : 56)) / w, .46);
-  const fs = mob ? Math.min(.95, vw(fd) * .94 / (2 * WMAX)) : Math.min(.9, vw(fd) * (1 - pf) * .86 / (2 * WMAX), vh(fd) * .74 / H);
+  const fs = mob ? Math.min(.95, vw(fd) * .6 / WMAX) : Math.min(vw(fd) * (1 - pf) * .5 / WMAX, vh(fd) * .72 / H);
   const fxC = mob ? 0 : -vw(fd) * pf / 2, fy = mob ? vh(fd) * .23 : .05;
   const lz = mob ? 3.2 : 5.3, ld = camZ - lz;
   const rs = mob ? .74 : .6 * Math.min(1.1, Math.sqrt(asp / 1.7));
@@ -188,7 +189,7 @@ function layout() {
 
 /* ---------- stato ---------- */
 let ringRot = 0, snapT = 0, ringVel = 0, dragging = false, lastX = 0, lastT = 0, moved = 0, idle = 0, hover = -1, focus = -1, focusT = 0, spin = 0, spinTarget = 0, closeT = 9;
-let heroOut = 0, pLibro = 0, started = false, ringShift = 0, pxW = 0;
+let heroOut = 0, pLibro = 0, started = false, ringShift = 0, pxW = 0, spinX = 0, spinXTarget = 0, lastY = 0;
 const mouse = new THREE.Vector2(9, 9), mSmooth = new THREE.Vector2(), V0 = new THREE.Vector2();
 const ray = new THREE.Raycaster();
 const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -229,11 +230,10 @@ function target(i, t) {
   }
   if (focus >= 0) {
     if (i === focus) {
-      const o = focusT > .55 ? 1 : 0, w = books[i].W * L.focusS;
-      // aperto: la costa al centro dello spazio libero; chiuso: il libro intero al centro
-      p.set(L.mob ? w / 2 * o : L.focusC + w / 2 * o, L.focusY, L.focusZ);
-      eA.set(.03 + mSmooth.y * .04, (-.22 + mSmooth.x * .06) * (1 - o) + spin, 0); q.setFromEuler(eA);
-      s = L.focusS; open = o;
+      // il libro resta chiuso, al centro dello spazio libero: si ruota trascinandolo e torna sempre sulla copertina
+      p.set(L.mob ? 0 : L.focusC, L.focusY + Math.sin(t * .9) * .03, L.focusZ);
+      eA.set(.04 + mSmooth.y * .05 + spinX, -.2 + mSmooth.x * .1 + spin, 0); q.setFromEuler(eA);
+      s = L.focusS; open = 0;
     } else { p.z -= L.push; if (L.flow) s *= .001; } // su mobile gli altri libri non devono spuntare sotto quello aperto
   }
   return { p, q, s, open };
@@ -248,22 +248,18 @@ function updateBar() {
   if (!hbN) return;
   hbN.textContent = b.n; hbP.innerHTML = `<span class="swap">${b.catLabel}</span>`;
   hbT.innerHTML = `<span class="swap">${b.short}</span>`;
-  const of = $('#openFront'); if (of) of.innerHTML = (b.hard ? 'Apri il libro' : 'Sfoglia') + ' <i>↗</i>';
+  const of = $('#openFront'); if (of) of.innerHTML = 'Scopri <i>↗</i>';
 }
 function priceHtml(b) { return b.price == null ? '' : `<div class="p-price"><b>${euro(b.price)}</b>${b.compare ? `<s>${euro(b.compare)}</s>` : ''}<span>Download immediato</span></div>`; }
 function fillPanel(i) {
   const b = BOOKS[i];
   const buy = b.price == null
     ? `<a class="pill lg r" href="${b.buy}" target="_blank" rel="noopener">Acquista su Amazon ↗</a><a class="pill ghost lg" href="https://www.amazon.it/dp/B0DQRGZW93" target="_blank" rel="noopener">eBook Kindle ↗</a>`
-    : window.__onBuy ? `<button class="pill lg r" id="pBuy">Aggiungi al carrello · ${euro(b.price)}</button>`
+    : window.__onBuy ? `<button class="pill lg r p-cta" id="pBuy">Aggiungi al carrello <i>→</i></button>`
     : `<a class="pill lg r" href="${window.__buyHref ? window.__buyHref(b) : b.buy}">Acquista ora ↗</a>`;
   panel.innerHTML = `
    <div class="p-top"><span class="mono">${b.catLabel}</span><button class="x" id="pClose" aria-label="Chiudi">✕</button></div>
    <h3>${b.title.replace(/\|/g, '<br>')}</h3>
-   <p class="p-sub">${b.sub}</p>
-   <div class="p-meta">${b.meta.map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div>
-   <h5>${b.listTitle}</h5>
-   <ol>${b.chapters.map((c, k) => `<li style="animation-delay:${.35 + k * .06}s">${c}</li>`).join('')}</ol>
    <div class="p-buy">${priceHtml(b)}${buy}</div>
    <div class="p-nav"><button id="pPrev">← ${BOOKS[mod(i - 1, N)].short}</button><button id="pNext">${BOOKS[mod(i + 1, N)].short} →</button></div>`;
   $('#pClose').onclick = closeFocus; $('#pPrev').onclick = () => switchFocus(-1); $('#pNext').onclick = () => switchFocus(1);
@@ -271,8 +267,9 @@ function fillPanel(i) {
 }
 function openFocus(i) {
   if (heroOut < .5) { const k = Math.round((ringRot + i * STEP) / TAU); snapT = -i * STEP + k * TAU; }
-  focus = i; focusT = 0; spin = 0; spinTarget = 0; hover = -1;
+  focus = i; focusT = 0; spin = 0; spinTarget = 0; spinX = 0; spinXTarget = 0; hover = -1;
   fillPanel(i); document.body.classList.add('focus'); panel.setAttribute('aria-hidden', 'false');
+  if (L.mob) layout(); // il pannello cambia altezza col libro: il libro si adatta
   window.__lenis && window.__lenis.stop(); setCursor(null); setDPR(DPR_READ);
 }
 function closeFocus() { if (focus < 0) return; focus = -1; closeT = 0; document.body.classList.remove('focus'); panel.setAttribute('aria-hidden', 'true'); window.__lenis && window.__lenis.start(); setDPR(DPR_SCROLL); }
@@ -303,16 +300,17 @@ addEventListener('pointermove', e => {
   mouse.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
   if (dragging) {
     const dx = e.clientX - lastX, now = performance.now(); moved += Math.abs(dx);
-    if (focus >= 0) spinTarget += dx * .008; else { ringRot += dx * .0055; ringVel = dx * .0055 / Math.max(.008, (now - lastT) / 1000); }
-    lastX = e.clientX; lastT = now; idle = 0;
+    if (focus >= 0) { spinTarget += dx * .01; spinXTarget = clamp(spinXTarget + (e.clientY - lastY) * .006, -.7, .7); } else { ringRot += dx * .0055; ringVel = dx * .0055 / Math.max(.008, (now - lastT) / 1000); }
+    lastX = e.clientX; lastY = e.clientY; lastT = now; idle = 0;
   }
 }, { passive: true });
-canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastT = performance.now(); moved = 0; ringVel = 0; canvas.classList.add('grabbing');
+canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; lastT = performance.now(); moved = 0; ringVel = 0; canvas.classList.add('grabbing');
   mouse.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); });
 addEventListener('pointerup', () => {
   if (!dragging) return; dragging = false; canvas.classList.remove('grabbing');
   if (moved >= 7 && focus < 0) { const proj = ringRot + clamp(ringVel, -12, 12) * .18; snapT = Math.round(proj / STEP) * STEP; }
-  if (focus >= 0) spinTarget = 0;
+  // rilasciato: torna alla copertina per la via più breve
+  if (focus >= 0) { spin = Math.atan2(Math.sin(spin), Math.cos(spin)); spinTarget = 0; spinXTarget = 0; }
 });
 canvas.addEventListener('click', e => {
   if (moved >= 7) return;
@@ -368,11 +366,11 @@ function frame() {
     if (focus < 0 && hover < 0 && idle > 4.2 && ringInView() && !document.hidden) { snapT -= STEP; idle = 0; }
     ringRot += (snapT - ringRot) * (1 - Math.exp(-dt * 4.2));
   } else snapT = ringRot;
-  if (focus >= 0) { focusT += dt; spin += (spinTarget - spin) * (1 - Math.exp(-dt * (dragging ? 14 : 5))); }
+  if (focus >= 0) { focusT += dt; const ks = 1 - Math.exp(-dt * (dragging ? 14 : 4)); spin += (spinTarget - spin) * ks; spinX += (spinXTarget - spinX) * ks; }
 
   if (!dragging) {
     const h = focus >= 0 ? -1 : pick();
-    if (h !== hover) { hover = h; canvas.classList.toggle('over', h >= 0); setCursor(h >= 0 ? (BOOKS[h].hard ? 'APRI IL LIBRO' : 'SFOGLIA') : null); }
+    if (h !== hover) { hover = h; canvas.classList.toggle('over', h >= 0); setCursor(h >= 0 ? 'SCOPRI' : null); }
   }
   updateBar();
 

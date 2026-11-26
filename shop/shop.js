@@ -60,7 +60,7 @@ HACK.forEach((b, i) => {
   tabs.insertAdjacentHTML('beforeend', `<button class="tab${i ? '' : ' on'}" data-tab="${i}">${b.short}</button>`);
   ccPanes.insertAdjacentHTML('beforeend', `<div class="cc-pane${i ? '' : ' on'}">
     <div class="box"><ul>${b.chapters.map(c => `<li>${c}</li>`).join('')}</ul></div>
-    <div class="buyrow"><div class="pr"><b>${euro(b.price)}</b><s>${euro(b.compare)}</s></div><button class="pill lg" data-add="${b.id}">Aggiungi al carrello</button><button class="pill ghost lg" style="color:var(--ink);box-shadow:inset 0 0 0 1px var(--lineD)" data-open="${BOOKS.indexOf(b)}">Sfoglia in 3D</button></div></div>`);
+    <div class="buyrow"><div class="pr"><b>${euro(b.price)}</b><s>${euro(b.compare)}</s></div><button class="pill lg" data-add="${b.id}">Aggiungi al carrello</button><button class="pill ghost lg" style="color:var(--ink);box-shadow:inset 0 0 0 1px var(--lineD)" data-open="${BOOKS.indexOf(b)}">Vedi in 3D</button></div></div>`);
 });
 ccBook.innerHTML = bookHtml(HACK[0], 8); tiltBook(ccBook.querySelector('.book'));
 tabs.addEventListener('click', e => {

@@ -153,8 +153,11 @@ body.focus #panel{transform:none}
 body.focus #panel li{animation:liIn .5s forwards}
 @keyframes liIn{to{opacity:1;transform:none}}
 #panel li::before{content:"0" counter(c);font-size:11px;font-weight:600;color:var(--acid);padding-top:3px}
-#panel .p-buy{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+#panel h3{margin-top:auto}
+#panel .p-buy{display:flex;flex-direction:column;gap:14px}
 #panel .p-buy .pill{justify-content:center;padding:15px}
+#panel .p-cta{padding:22px 20px 21px;font-size:15px;letter-spacing:.14em;box-shadow:0 0 0 0 rgba(241,255,98,.5),0 18px 40px rgba(241,255,98,.18);animation:ctaPulse 2.6s 1s infinite}
+@keyframes ctaPulse{0%{box-shadow:0 0 0 0 rgba(241,255,98,.45),0 18px 40px rgba(241,255,98,.18)}70%,100%{box-shadow:0 0 0 14px rgba(241,255,98,0),0 18px 40px rgba(241,255,98,.18)}}
 .p-price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .p-price b{font-weight:400;font-size:38px;line-height:1}
 .p-price s{color:var(--mute);font-size:18px}
@@ -201,7 +204,7 @@ body.focus .focus-hint{opacity:1}
   #libro .sticky{align-items:flex-end;padding-bottom:40px}
   .libro-copy{width:100%;background:linear-gradient(transparent,rgba(15,18,26,.94) 25%);padding-top:60px}
   .steps{height:120px}
-  #panel{width:100%;top:auto;height:52vh;height:52svh;border-left:0;border-top:1px solid var(--line);padding:22px var(--pad);transform:translateY(102%)}
+  #panel{width:100%;top:auto;height:auto;max-height:60svh;border-left:0;border-top:1px solid var(--line);padding:22px var(--pad);transform:translateY(102%)}
   .focus-hint{display:none}
   body.focus .rail,body.focus .sbar,body.cart-open .rail,body.cart-open .sbar{opacity:0;visibility:hidden;pointer-events:none}
   .rail,.sbar{transition:opacity .4s,visibility 0s}
